@@ -11,11 +11,12 @@ class Ball{
         Ball(float x_in, float y_in, float r_in, float dx_in, float dy_in);
         void draw(sf::RenderWindow &window);
         void move();
-        void bounceW(float w, float h);
-        void bouncePX();
-        void bouncePY();
+        void collideWall(float w, float h);
+        void bounceX();
+        void bounceY();
         sf::Vector2f pos() {return ball.getPosition();}
         float radius() {return ball.getRadius();}
+        void collideRectangle(float px,float  py,float  sizeX,float  sizeY);
 };
 
 Ball::Ball(float x_in, float y_in, float r_in, float dx_in, float dy_in){
@@ -42,22 +43,52 @@ void Ball::move(){
     ball.setPosition(x,y);
 }
 
-void Ball::bounceW(float w, float h){
+void Ball::collideWall(float w, float h){
     if (x+r >= w || x-r <= 0){
-        dx = -dx;
+        bounceX();
+        while(x+r >= w || x-r <= 0){
         move();
+        }
     }
     
     if (y+r >= h || y-r <= 0){
-        dy = -dy;
+        bounceY();
+        while(y+r >= h || y-r <= 0){
         move();
+        }
     }
 }
 
-void Ball::bouncePX(){
+void Ball::bounceX(){
     dx = -dx;
 }
 
-void Ball::bouncePY(){
+void Ball::bounceY(){
     dy = -dy;
 }
+
+void Ball::collideRectangle(float px,float  py,float  sizeX,float  sizeY){
+    if(pos().y + radius() >= py - (sizeY/2) && 
+                    pos().y - radius() <= py + (sizeY/2) && 
+                    pos().x + radius() >= px - (sizeX/2) && 
+                    pos().x - radius() <= px + (sizeX/2)){
+                float dXValue = abs(pos().x - px)/((sizeX/2)+radius()); 
+                float dYValue = abs(pos().y - py)/((sizeY/2)+radius());
+                if (dXValue > dYValue){
+                    bounceX();
+                }
+                else if (dXValue < dYValue){
+                    bounceY();
+                }
+                else {
+                    bounceX();
+                    bounceY();
+                }
+                while(pos().y + radius() >= py - (sizeY/2) && 
+                    pos().y - radius() <= py + (sizeY/2) && 
+                    pos().x + radius() >= px - (sizeX/2) && 
+                    pos().x - radius() <= px + (sizeX/2)){
+                    move();
+                }
+        }
+    }
