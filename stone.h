@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <array>
+#pragma once
 
 class Stone{
     private:
@@ -17,6 +18,7 @@ class Stone{
         void takeDamage();
         void collideBall(float bx,float  by,float  radius);
         bool getIsDead();
+        int getHp();
         sf::Vector2f pos() {return rectangle.getPosition();}
         sf::Vector2f size() {return rectangle.getSize();}
 };
@@ -83,4 +85,8 @@ bool Stone::getIsDead(){
             by + radius >= top && by - radius <= bottom) {
             takeDamage();
         }
+}
+
+ int Stone::getHp() {
+     return hp;
 }
