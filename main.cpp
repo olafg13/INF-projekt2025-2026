@@ -2,9 +2,6 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-//#include "ball.h"
-//#include "paddle.h"
-//#include "stone.h"
 #include "game.h"
 
 int main() {

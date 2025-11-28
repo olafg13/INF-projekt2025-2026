@@ -15,6 +15,7 @@ class Ball{
         void collideWall(float w, float h);
         void bounceX();
         void bounceY();
+        void setPos(float x1, float y1);
         sf::Vector2f pos() {return ball.getPosition();}
         float radius() {return ball.getRadius();}
         void collideRectangle(float px,float  py,float  sizeX,float  sizeY);
@@ -68,28 +69,47 @@ void Ball::bounceY(){
     dy = -dy;
 }
 
+void Ball::setPos(float x1, float y1){
+    x = x1;
+    y = y1;
+}
+
 void Ball::collideRectangle(float px,float  py,float  sizeX,float  sizeY){
     if(pos().y + radius() >= py - (sizeY/2) && 
                     pos().y - radius() <= py + (sizeY/2) && 
                     pos().x + radius() >= px - (sizeX/2) && 
-                    pos().x - radius() <= px + (sizeX/2)){
-                float dXValue = abs(pos().x - px)/((sizeX/2)+radius()); 
-                float dYValue = abs(pos().y - py)/((sizeY/2)+radius());
-                if (dXValue > dYValue){
-                    bounceX();
-                }
-                else if (dXValue < dYValue){
-                    bounceY();
-                }
-                else {
-                    bounceX();
-                    bounceY();
-                }
-                while(pos().y + radius() >= py - (sizeY/2) && 
+                    pos().x - radius() <= px + (sizeX/2))
+                {
+                float left = (px - sizeX/2);
+                float right = (px + sizeX/2);
+                float top = (py + sizeY/2);
+                float bot = (py - sizeY/2);
+                float overlapLeft = (pos().x + radius())-left;
+                float overlapRight = right - (pos().x - radius());
+                float overlapTop = top - (pos().y - radius());
+                float overlapBot = (pos().y + radius())-bot;
+                float minOverlap = std::min({overlapLeft, overlapRight, overlapTop, overlapBot});
+                    if (minOverlap == overlapRight){
+                        setPos(px + sizeX/2 + radius(), pos().y);
+                        bounceX();
+                    }
+                    else if(minOverlap == overlapLeft){
+                        setPos(px-sizeX/2 - radius(), pos().y);
+                        bounceX();
+                    }
+                    else if (minOverlap == overlapBot){
+                        setPos(pos().x ,py - sizeY/2 - radius());
+                        bounceY();
+                    }
+                    else if (minOverlap == overlapTop){
+                        setPos(pos().x , py + sizeY/2 + radius());
+                        bounceY();
+                    }
+                /*while(pos().y + radius() >= py - (sizeY/2) && 
                     pos().y - radius() <= py + (sizeY/2) && 
                     pos().x + radius() >= px - (sizeX/2) && 
                     pos().x - radius() <= px + (sizeX/2)){
                     move();
-                }
-        }
+                }*/
+            }
     }

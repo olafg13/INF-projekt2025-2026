@@ -6,6 +6,7 @@
 class Stone{
     private:
         int hp;
+        bool recentDamageFlag;
         bool isDead;
         float x, y;
         float width, height;
@@ -49,6 +50,7 @@ Stone::Stone(float x_in, float y_in, float width_in, float height_in, int hp_in)
     rectangle.setOutlineThickness(2);
     rectangle.setOutlineColor(sf::Color(255,255,255));
     updateColor();
+    recentDamageFlag = false;
 }
 
 void Stone::draw(sf::RenderWindow &window){
@@ -62,7 +64,6 @@ void Stone::updateColor(){
 }
 
 void Stone::takeDamage(){
-    if (isDead == true){rectangle.setPosition(9999,9999);}
     if (hp>0) hp = hp -1;
     if (hp==0) {
         isDead = true;
@@ -75,18 +76,22 @@ bool Stone::getIsDead(){
 }
 
 
- void Stone::collideBall(float bx, float by, float radius) {
+void Stone::collideBall(float bx, float by, float radius) {
         float left = x - width/2;
         float right = x + width/2;
         float top = y - height/2;
         float bottom = y + height/2;
 
         if (bx + radius >= left && bx - radius <= right &&
-            by + radius >= top && by - radius <= bottom) {
+            by + radius >= top && by - radius <= bottom && recentDamageFlag == false) {
             takeDamage();
+            recentDamageFlag = true;
+            return;
         }
+        recentDamageFlag = false;
 }
 
- int Stone::getHp() {
+int Stone::getHp() {
      return hp;
 }
+

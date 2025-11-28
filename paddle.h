@@ -14,6 +14,7 @@ class Paddle{
         void moveRight();
         void moveLeft();
         void block(float w);
+        void setPos(float x1, float y1);
         sf::Vector2f pos() {return rectangle.getPosition();}
         sf::Vector2f size() {return rectangle.getSize();}
 };
@@ -53,4 +54,10 @@ void Paddle::block(float w){
     if (x-(width/2) <= 0){
         x = x + speed;
     }
+}
+
+void Paddle::setPos(float x1, float y1){
+    x = x1;
+    y = y1;
+    rectangle.setPosition(x,y);
 }
