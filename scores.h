@@ -88,7 +88,7 @@ ScoreMenu::ScoreMenu(float width, float height, const std::string& filename)
 
     menu.resize(scoreNumber);
 
-    if (!font.loadFromFile("arial.ttf")) return;
+    if (!font.loadFromFile("LiberationSans-Regular.ttf")) return;
 
     for (int i = 0; i < scoreNumber; i++) {
         menu[i].setFont(font);	

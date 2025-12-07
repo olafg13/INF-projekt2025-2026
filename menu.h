@@ -26,7 +26,7 @@ public:
 
 Menu::Menu(float width, float height)
 {	//laduj czcionke
-	if (!font.loadFromFile("arial.ttf"))
+	if (!font.loadFromFile("LiberationSans-Regular.ttf"))
 	{
 		return;
 	}

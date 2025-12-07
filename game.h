@@ -48,7 +48,7 @@ s()
     blockSizeX = (width - (columns-1)*2) / columns;
     
     
-    if (!font.loadFromFile("arial.ttf")) {
+    if (!font.loadFromFile("LiberationSans-Regular.ttf")) {
         std::cout << "Nie mozna zaladowac czcionki!\n" << std::endl;
         return;
     }
@@ -181,7 +181,7 @@ void Game::run(){
                 window.clear(sf::Color::Black);
                 sf::Text koniec;
                 sf::Font font;
-                if (!font.loadFromFile("arial.ttf"))
+                if (!font.loadFromFile("LiberationSans-Regular.ttf"))
                     {
                         return;
                     }
