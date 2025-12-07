@@ -24,14 +24,15 @@ private:
 	float height = 600;
 	float blockSizeY = 25;
     float blockSizeX = (width - (columns-1)*2) / columns;
+	int points;
 public:
-	gameState(float px, float py, float bx, float by, float bvx, float bvy, std::vector<Stone> stones);
+	gameState(float px, float py, float bx, float by, float bvx, float bvy, std::vector<Stone> stones, int score);
 	bool save(const std::string& filename);
 	bool load(const std::string& filename);
-	void apply(Paddle &p, Ball &b, std::vector<Stone>& stones);
+	void apply(Paddle &p, Ball &b, std::vector<Stone>& stones, int& score);
 };
 
-gameState::gameState(float px, float py, float bx, float by, float bvx, float bvy, std::vector<Stone> stones) {
+gameState::gameState(float px, float py, float bx, float by, float bvx, float bvy, std::vector<Stone> stones, int score) {
 	pPosX = px;
 	pPosY = py;
 	bPosX = bx;
@@ -39,6 +40,7 @@ gameState::gameState(float px, float py, float bx, float by, float bvx, float bv
 	bVelX = bvx;
 	bVelY = bvy;
 	blocks = stones;
+	points = score;
 }
 
 bool gameState::save(const std::string& filename) {
@@ -49,6 +51,8 @@ bool gameState::save(const std::string& filename) {
 
 	file << "Ball " << bPosX << " " << bPosY << " "
 		<< bVelX << " " << bVelY << "\n";
+
+	file << "Score" << " " << points << "\n";
 
 	file << "Blocks " << blocks.size() << "\n";
 
@@ -74,6 +78,10 @@ bool gameState::load(const std::string& filename) {
 
 	}
 
+	if (file >> label >> points) {
+
+	}
+
 	int blocksCount;
 	file >> label >> blocksCount;
 
@@ -88,8 +96,9 @@ bool gameState::load(const std::string& filename) {
 	return true;
 }
 
-void gameState::apply(Paddle& p, Ball& b, std::vector<Stone>& stones) {
+void gameState::apply(Paddle& p, Ball& b, std::vector<Stone>& stones, int& score) {
 	p.setPos(pPosX, pPosY);
 	b.setPos(bPosX, bPosY);
 	stones = blocks;
+	score = points;
 }

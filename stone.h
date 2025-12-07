@@ -17,7 +17,7 @@ class Stone{
         void draw(sf::RenderWindow &window);
         void updateColor();
         void takeDamage();
-        void collideBall(float bx,float  by,float  radius);
+        bool collideBall(float bx,float  by,float  radius);
         bool getIsDead();
         int getHp();
         sf::Vector2f pos() {return rectangle.getPosition();}
@@ -76,7 +76,7 @@ bool Stone::getIsDead(){
 }
 
 
-void Stone::collideBall(float bx, float by, float radius) {
+bool Stone::collideBall(float bx, float by, float radius) {
         float left = x - width/2;
         float right = x + width/2;
         float top = y - height/2;
@@ -86,9 +86,10 @@ void Stone::collideBall(float bx, float by, float radius) {
             by + radius >= top && by - radius <= bottom && recentDamageFlag == false) {
             takeDamage();
             recentDamageFlag = true;
-            return;
+            return true;
         }
         recentDamageFlag = false;
+        return false;
 }
 
 int Stone::getHp() {
