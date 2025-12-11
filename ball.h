@@ -73,7 +73,7 @@ void Ball::setPos(float x1, float y1){
     x = x1;
     y = y1;
 }
-
+//logika odbić poprzez kolizję z dowolnym prostokątem
 void Ball::collideRectangle(float px,float  py,float  sizeX,float  sizeY){
     if(pos().y + radius() >= py - (sizeY/2) && 
                     pos().y - radius() <= py + (sizeY/2) && 
@@ -105,11 +105,5 @@ void Ball::collideRectangle(float px,float  py,float  sizeX,float  sizeY){
                         setPos(pos().x , py + sizeY/2 + radius());
                         bounceY();
                     }
-                /*while(pos().y + radius() >= py - (sizeY/2) && 
-                    pos().y - radius() <= py + (sizeY/2) && 
-                    pos().x + radius() >= px - (sizeX/2) && 
-                    pos().x - radius() <= px + (sizeX/2)){
-                    move();
-                }*/
             }
     }

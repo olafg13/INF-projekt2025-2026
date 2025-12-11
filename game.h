@@ -9,6 +9,7 @@
 #include "scores.h"
 #pragma once
 
+//Klasa odpowiedzialna za całą grę
 class Game{
     private:
 
@@ -34,7 +35,7 @@ class Game{
 };
 
 Game::Game():
-
+//wartości początkowe
 width(800), height(600),
 window(sf::VideoMode(width, height), "SFML"),
 b(width/2, height/2, 20, 5, 5),
@@ -47,18 +48,19 @@ s()
     blockSizeY = 25;
     blockSizeX = (width - (columns-1)*2) / columns;
     
-    
+    //załadowanie czcionki wraz z testem czy działa
     if (!font.loadFromFile("LiberationSans-Regular.ttf")) {
         std::cout << "Nie mozna zaladowac czcionki!\n" << std::endl;
         return;
     }
+    //napis w rogu wynik:
     scoreText.setFont(font);
             scoreText.setFillColor(sf::Color::White);
             scoreText.setPosition(width*0.005, height*0.9375);
 
     window.setFramerateLimit(60);
 
-    
+    //stworzenie stones
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
             int hp = (i < 1) ? 3 : (i < 3) ? 2 : 1;
@@ -67,11 +69,11 @@ s()
         }
     }
 }
-
+//główna pętla
 void Game::run(){
     Menu menu(window.getSize().x, window.getSize().y);
     sf::Event event;
-    window.setKeyRepeatEnabled(true);
+    window.setKeyRepeatEnabled(true); //dla ciągłych inputów klawiszy
     while (window.isOpen()) {
         
         while (window.pollEvent(event)) {
@@ -103,10 +105,10 @@ void Game::run(){
                             score = 0;
                             width = 800;
                             height = 600;
-                            b = Ball(width/2, height/2, 20, 5, 5);
+                            b = Ball(width/2, height/2, 20, 5, 5); //reset ball i paddle
                             p = Paddle(width/2, height - (height/6), 150, 50, 10);
                             
-                            stones.clear();
+                            stones.clear(); //reset stones
                             for (int i = 0; i < rows; i++) {
                                 for (int j = 0; j < columns; j++) {
                                     int hp = (i < 1) ? 3 : (i < 3) ? 2 : 1;
@@ -121,34 +123,34 @@ void Game::run(){
                         {
                             std::cout << "Zapisuje gre..." << std::endl;
                             menu_selected_flag = 0;
-                            gameState save(p.pos().x, p.pos().y, b.pos().x, b.pos().y, 5, 5, stones, score);
+                            gameState save(p.pos().x, p.pos().y, b.pos().x, b.pos().y, 5, 5, stones, score); //zapis stanu gry
                             if(gameStateFlag==1) save.save("savefile.txt");
-                            else std::cout << "Brak rozpoczetej gry do zapisania" << std::endl;
+                            else std::cout << "Brak rozpoczetej gry do zapisania" << std::endl; //blad (brak gry)
                         }
 
                         else if (event.key.code == sf::Keyboard::Enter && menu.getSelectedItem() == 2)
                         {
                             std::cout << "Wczytuje gre..." << std::endl;
-                            gameState load(0,0,0,0,0,0,{},0);
-                            if(!load.load("savefile.txt")){
+                            gameState load(0,0,0,0,0,0,{},0); //stworzenie pustej klasy gameState
+                            if(!load.load("savefile.txt")){ //załadowanie danych do obiektu load
                                 std::cout << "Nie udalo sie wczytac" << std::endl;
                                 break;
                             }
                             gameStateFlag = 1; //Flaga trwania gry
-                            load.apply(p, b, stones, score);
+                            load.apply(p, b, stones, score); //zaaplikowanie wczytania gry
                             menu_selected_flag = 1;
                         }
 
                         else if (event.key.code == sf::Keyboard::Enter && menu.getSelectedItem() == 3)
                         {
-                            std::cout << "Najlepsze wyniki..." << std::endl;
-                            menu_selected_flag = 2;
+                            std::cout << "Ostatnie wyniki..." << std::endl;
+                            menu_selected_flag = 2; //flaga przenosi do menu wyników
                         }
                             
                         else if (event.key.code == sf::Keyboard::Enter && menu.getSelectedItem() == 4)
                         {
                             std::cout << "Koniec gry..." << std::endl;
-                            window.close();
+                            window.close(); //zamknięcie okna
                         }
                     }
                 }
@@ -171,15 +173,15 @@ void Game::run(){
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
                 menu_selected_flag = 0;
             }
-            p.block(width);
+            p.block(width); //blokowanie paddle o ściany
 
-            b.move();
+            b.move(); //ruch piłki
 
-            if(b.pos().y + b.radius() >= height){
+            if(b.pos().y + b.radius() >= height){ //przegranie gry
                 std::cout << "MISS! KONIEC GRY\n";
 
                 window.clear(sf::Color::Black);
-                sf::Text koniec;
+                sf::Text koniec; //title koniec
                 sf::Font font;
                 if (!font.loadFromFile("LiberationSans-Regular.ttf"))
                     {
@@ -189,20 +191,20 @@ void Game::run(){
                 koniec.setString("Koniec gry!");
                 koniec.setCharacterSize(40);
                 koniec.setFillColor(sf::Color::Red);
-                sf::FloatRect bounds = koniec.getLocalBounds();
+                sf::FloatRect bounds = koniec.getLocalBounds(); //kilka linijek do wyśrodkowania tekstu
                 koniec.setOrigin(bounds.width / 2, bounds.height / 2);
                 koniec.setPosition(width/2,height/2);
                 window.draw(koniec);
                 window.display();
 
-                s.save("Scores.txt", score);
-                myDelay(3000);
+                s.save("Scores.txt", score); //zapis wyniku
+                myDelay(3000); //blokada aby ekran koniec gry na chwilę został
                 menu_selected_flag = 0;
                 gameStateFlag = 2; //Flaga przegranej gry
 
             }
 
-            b.collideWall(width,height);
+            b.collideWall(width,height); //kolizja piłki z ścianami
             b.collideRectangle(p.pos().x, p.pos().y, p.size().x, p.size().y); //odbicie od paddle
             for (int i = 0; i < stones.size(); i++) //odbicie od stones
             {
@@ -222,10 +224,10 @@ void Game::run(){
                 }
             }
             
-            scoreText.setString("Wynik: "+std::to_string(score));
+            scoreText.setString("Wynik: "+std::to_string(score)); //aktualizacja napisu z wynikiem
 
             window.clear(sf::Color::Black);
-            for (int i = 0; i < stones.size(); i++) {
+            for (int i = 0; i < stones.size(); i++) { //rysowanie stones
                 stones[i].draw(window);
             }
             b.draw(window);
@@ -235,14 +237,14 @@ void Game::run(){
             myDelay(10);
         }
         
-        if (menu_selected_flag == 2){
+        if (menu_selected_flag == 2){ //menu wyników
             std::ifstream file("Scores.txt");
             if(!file.is_open()){
                 menu_selected_flag = 0;
                 std::cout << "Nie udalo sie wczytac Scores.txt" << std::endl;
             }
             else{
-                ScoreMenu sMenu(width,height,"Scores.txt");
+                ScoreMenu sMenu(width,height,"Scores.txt"); //utworzenie lub aktualizacja menu
                 window.clear(sf::Color::Black);
                 sMenu.draw(window);
                 window.display();

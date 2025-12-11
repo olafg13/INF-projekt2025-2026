@@ -33,7 +33,7 @@ const std::array<sf::Color, 4> Stone::colorLUT = {
 
 Stone::Stone(float x_in, float y_in, float width_in, float height_in, int hp_in){
     hp = hp_in;
-    if (hp > 3){
+    if (hp > 3){ //zabezpieczenie, aby hp było w zakresie od 0 do 3
         hp = 3;
     }
     if (hp < 0){
@@ -75,7 +75,7 @@ bool Stone::getIsDead(){
     return isDead;
 }
 
-
+//logika za utratą hp (w ball.h znajduje się logika odbicia)
 bool Stone::collideBall(float bx, float by, float radius) {
         float left = x - width/2;
         float right = x + width/2;

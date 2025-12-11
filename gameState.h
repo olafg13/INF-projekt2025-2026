@@ -42,10 +42,10 @@ gameState::gameState(float px, float py, float bx, float by, float bvx, float bv
 	blocks = stones;
 	points = score;
 }
-
+//zapis gry
 bool gameState::save(const std::string& filename) {
 	std::ofstream file(filename);
-	if (!file.is_open()) return false;
+	if (!file.is_open()) return false; //detekcja błędu wczytania
 
 	file << "Paddle " << pPosX << " " << pPosY << "\n";
 
@@ -63,10 +63,10 @@ bool gameState::save(const std::string& filename) {
 	file.close();
 	return true;
 }
-
+//wczytanie gry
 bool gameState::load(const std::string& filename) {
 	std::ifstream file(filename);
-	if (!file.is_open()) return false;
+	if (!file.is_open()) return false; //detekcja błędu wczytania
 
 	std::string label;
 
@@ -86,7 +86,7 @@ bool gameState::load(const std::string& filename) {
 	file >> label >> blocksCount;
 
 	blocks.clear();
-	for (int i = 0; i < blocksCount; i++) {
+	for (int i = 0; i < blocksCount; i++) { //zapis stanu bloków
 		float x, y;
 		int hp;
 		file >> label >> x >> y >> hp;
@@ -95,7 +95,7 @@ bool gameState::load(const std::string& filename) {
 	file.close();
 	return true;
 }
-
+//zaaplikowanie wczytanego pliku
 void gameState::apply(Paddle& p, Ball& b, std::vector<Stone>& stones, int& score) {
 	p.setPos(pPosX, pPosY);
 	b.setPos(bPosX, bPosY);
